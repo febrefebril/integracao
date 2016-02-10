@@ -1,4 +1,4 @@
-#include <NewPing.h>
+#include "NewPing.h"
 #include <SoftwareSerial.h>
 
 #define DISTANCIA_MAXIMA               200
@@ -83,30 +83,105 @@ void setup()
 }
 void alerta_vibratorio(int pino, int potencia, int quantidade, int tempo_ligado)
 {
+   if (DEBUG == 1)
+   {
+       Serial.println(F("Entrando em alerta vibratorio"));
+       Serial.print(F("pino: "));
+       Serial.println(pino);
+       Serial.print(F("potencia: "));
+       Serial.println(potencia);
+       Serial.print(F("quantidade: "));
+       Serial.println(quantidade);
+       Serial.print(F("tempo ligado: "));
+       Serial.println(tempo_ligado);
+   }
    int i;
    for (i = 0; i < quantidade; i++)
    {
+       if (DEBUG == 1)
+       {
+           Serial.println(F("dentro do for"));
+       }
        
+       if (DEBUG == 1)
+       {
+           Serial.println(F("Ligando motor"));
+       }
        analogWrite(pino, potencia);
        delay(tempo_ligado);
+       if (DEBUG == 1)
+       {
+           Serial.println(F("Esperando"));
+       }
        analogWrite(pino, 0);
+       if (DEBUG == 1)
+       {
+           Serial.println(F("Desligando motor"));
+       }
        delay(tempo_ligado);
+       if (DEBUG == 1)
+       {
+           Serial.println(F("Esperando"));
+       }
    }
 }
 
 void alerta_vibratorio_duplo(int pino1, int pino2, int potencia, int quantidade, int tempo_ligado)
 {
-   int i;
-   for (i = 0; i < quantidade; i++)
-   {
-       
-       analogWrite(pino1, potencia);
-       analogWrite(pino2, potencia);
-       delay(tempo_ligado);
-       analogWrite(pino1, 0);
-       analogWrite(pino2, 0);
-       delay(tempo_ligado);
-   }
+    if (DEBUG == 1)
+    {
+        Serial.println(F("Entrando em alerta vibratorio duplo\n"));
+        Serial.print(F("pino1: "));
+        Serial.println(pino1);
+        Serial.print(("pino2: "));
+        Serial.println(pino2);
+        Serial.print(F("potencia: "));
+        Serial.println(potencia);
+        Serial.print(F("quantidade: "));
+        Serial.println(quantidade);
+        Serial.print(F("tempo ligado: "));
+        Serial.println(tempo_ligado);
+    }
+
+    int i;
+    for (i = 0; i < quantidade; i++)
+    {
+        if (DEBUG == 1)
+        {
+            Serial.println(F("dentro do for"));
+        }
+
+        if (DEBUG == 1)
+        {
+            Serial.println(F("ligando motor1"));
+        }
+        analogWrite(pino1, potencia);
+        if (DEBUG == 1)
+        {
+            Serial.println(F("ligando motor2"));
+        }
+        analogWrite(pino2, potencia);
+        if (DEBUG == 1)
+        {
+            Serial.println(F("Esperando"));
+        }
+        delay(tempo_ligado);
+        if (DEBUG == 1)
+        {
+            Serial.println(F("desligando motor1"));
+        }
+           analogWrite(pino1, 0);
+        if (DEBUG == 1)
+        {
+            Serial.println(F("desligando motor2"));
+        }
+        analogWrite(pino2, 0);
+        if (DEBUG == 1)
+        {
+            Serial.println(F("Esperando"));
+        }
+        delay(tempo_ligado);
+    }
 }
 
 void testa_motor(NewPing &ultra_som, int &motor_ativado, int pin_motor, const char *posicao)
@@ -305,39 +380,73 @@ void loop()
         Serial.print("  -  ");
         Serial.print(estado_atual[0]);
         Serial.println(" !");
+
         if (c == '0' and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio(PIN_MOTOR_FRONTAL, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor frontal!\n"));
+            }
+            alerta_vibratorio(PIN_MOTOR_FRONTAL, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '1' and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio_duplo(PIN_MOTOR_FRONTAL,PIN_MOTOR_DIREITO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor frontal e motor direito!\n"));
+            }
+            alerta_vibratorio_duplo(PIN_MOTOR_FRONTAL,PIN_MOTOR_DIREITO, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '2'and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio(PIN_MOTOR_DIREITO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor direito!\n"));
+            }
+            alerta_vibratorio(PIN_MOTOR_DIREITO, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '3'and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio_duplo(PIN_MOTOR_TRAZEIRO, PIN_MOTOR_DIREITO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor trazeiro e motor direito!\n"));
+            }
+            alerta_vibratorio_duplo(PIN_MOTOR_TRAZEIRO, PIN_MOTOR_DIREITO, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '4'and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio(PIN_MOTOR_TRAZEIRO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor trazeiro!\n"));
+            }
+            alerta_vibratorio(PIN_MOTOR_TRAZEIRO, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '5'and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio_duplo(PIN_MOTOR_TRAZEIRO, PIN_MOTOR_ESQUERDO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor trazeiro e motor esquerdo!\n"));
+            }
+            alerta_vibratorio_duplo(PIN_MOTOR_TRAZEIRO, PIN_MOTOR_ESQUERDO, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '6'and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio(PIN_MOTOR_ESQUERDO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor esquerdo!\n"));
+            }
+            alerta_vibratorio(PIN_MOTOR_ESQUERDO, POTENCIA_ALERTA, 1, 150);
         }
         if (c == '7'and estado_anterior[0] != estado_atual[0])
         {
-          alerta_vibratorio_duplo(PIN_MOTOR_FRONTAL, PIN_MOTOR_ESQUERDO, 254, 4, 100);
+            if (DEBUG == 1)
+            {
+                Serial.println(F("Vibrando motor frontal e motor esquerdo!\n"));
+            }
+            alerta_vibratorio_duplo(PIN_MOTOR_FRONTAL, PIN_MOTOR_ESQUERDO, POTENCIA_ALERTA, 1, 150);
         }
         estado_anterior[0] = estado_atual[0];
+        Serial.flush();
     }
 
     if (CONTROLE_EXECUCAO == 0)
